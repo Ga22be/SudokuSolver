@@ -160,24 +160,6 @@ public class Solver {
 	}
 
 	/**
-	 * Computes next logical index of the table in chronological order.
-	 * 
-	 * @param index
-	 *            Array containing the x & y coordinates in question, in that
-	 *            order.
-	 */
-	private static void nextIndex(int[] index) {
-		index[0] += 1;
-		if (index[0] == 9) {
-			index[0] = 0;
-			index[1] += 1;
-			if (index[1] == 9) {
-				index[1] = 0;
-			}
-		}
-	}
-
-	/**
 	 * Prints current state of puzzle.
 	 */
 	public void print() {
