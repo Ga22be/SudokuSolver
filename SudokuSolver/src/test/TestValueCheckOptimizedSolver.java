@@ -3,7 +3,7 @@ package test;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-public class TestValueCheck {
+public class TestValueCheckOptimizedSolver {
 	static int[][] table = { 
 			{ 9, 0, 6, 8, 1, 3, 5, 4, 0 },
 			{ 2, 0, 1, 0, 4, 5, 0, 6, 3 }, 
