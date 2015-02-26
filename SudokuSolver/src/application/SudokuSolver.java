@@ -1,6 +1,5 @@
 package application;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 import solver.SolverOld;

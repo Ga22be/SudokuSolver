@@ -127,10 +127,6 @@ public class TestValueCheckOptimizedSolver {
 		}
 	}
 	
-	private static void checkToBox(int[] index){
-		
-	}
-	
 	public static void print(){
 		for(int y = 0; y < 9; y ++){
 			System.out.print("[");

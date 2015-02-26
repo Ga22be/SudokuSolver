@@ -1,17 +1,9 @@
 package solver;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-
 public class Solver {
 	private int[][] table;
-	private LinkedList<Integer> full;
 
 	public Solver() {
-		full = new LinkedList<Integer>();
-		for (int i = 1; i < 10; i++) {
-			full.add(i);
-		}
 	}
 
 	public Solver(int[][] sudoku) {

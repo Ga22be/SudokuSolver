@@ -1,7 +1,5 @@
 package test;
 
-import java.util.LinkedList;
-
 import solver.OptimizedSolver;
 
 public class TestOptimizedSolver {
