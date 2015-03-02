@@ -1,9 +1,19 @@
 package solver;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.TreeSet;
+
 public class Solver {
 	private int[][] table;
+	private LinkedList<Integer> full;
 
 	public Solver() {
+		full = new LinkedList<Integer>();
+		for (int i = 1; i < 10; i++) {
+			full.add(i);
+		}
 	}
 
 	public Solver(int[][] sudoku) {
@@ -20,19 +30,20 @@ public class Solver {
 	}
 
 	public boolean solve() {
-		return solve(0, 0);
+		if (checkForDuplicates()) {
+			return solve(0, 0);
+		}
+		return false;
 	}
 
 	private boolean solve(int x, int y) {
 		if (x == 8 && y == 8) {
 			if (table[y][x] > 0) {
-				return checkToXRow(x, y) && checkToYRow(x, y)
-						&& checkToBox(x, y);
+				return checkSquare(x, y);
 			} else {
 				for (int i = 1; i < 10; i++) {
 					table[y][x] = i;
-					if (checkToXRow(x, y) && checkToYRow(x, y)
-							&& checkToBox(x, y)) {
+					if (checkSquare(x, y)) {
 						return true;
 					}
 				}
@@ -41,7 +52,7 @@ public class Solver {
 
 		} else {
 			if (table[y][x] > 0) {
-				if (checkToXRow(x, y) && checkToYRow(x, y) && checkToBox(x, y)) {
+				if (checkSquare(x, y)) {
 					int newX = x;
 					int newY = y;
 					newX += 1;
@@ -60,8 +71,7 @@ public class Solver {
 				for (int i = 1; i < 10; i++) {
 					boolean solved = false;
 					table[y][x] = i;
-					if (checkToXRow(x, y) && checkToYRow(x, y)
-							&& checkToBox(x, y)) {
+					if (checkSquare(x, y)) {
 						int newX = x;
 						int newY = y;
 						newX += 1;
@@ -82,7 +92,10 @@ public class Solver {
 				return false;
 			}
 		}
-		// return false;
+	}
+
+	private boolean checkSquare(int x, int y) {
+		return checkToXRow(x, y) && checkToYRow(x, y) && checkToBox(x, y);
 	}
 
 	/**
@@ -144,6 +157,40 @@ public class Solver {
 				} else {
 					if (table[y][x] == table[yIndex][xIndex]) {
 						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	private boolean checkForDuplicates() {
+		for (int y = 0; y < 9; y++) {
+			Set<Integer> setX = new TreeSet<Integer>();
+			Set<Integer> setY = new TreeSet<Integer>();
+			for (int x = 0; x < 9; x++) {
+				if (table[y][x] != 0) {
+					if (!setX.add(table[y][x])) {
+						return false;
+					}
+				}
+				if (table[x][y] != 0) {
+					if (!setY.add(table[x][y])) {
+						return false;
+					}
+				}
+				if (y % 3 == 0 && y % 3 == 0) {
+					Set<Integer> setBox = new TreeSet<Integer>();
+					int boxY = y / 3;
+					int boxX = x / 3;
+					for (int i = boxY; i < 3; i++) {
+						for (int j = boxX; j < 3; j++) {
+							if (table[i][j] != 0) {
+								if (!setBox.add(table[i][j])) {
+									return false;
+								}
+							}
+						}
 					}
 				}
 			}

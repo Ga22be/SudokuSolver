@@ -1,5 +1,7 @@
 package test;
 
+import java.util.*;
+
 public class TestIndexGenerator {
 	static int[][] table = { 
 			{ 9, 0, 6, 8, 1, 3, 5, 4, 0 },
