@@ -7,13 +7,9 @@ import java.util.TreeSet;
 
 public class Solver {
 	private int[][] table;
-	private LinkedList<Integer> full;
 
 	public Solver() {
-		full = new LinkedList<Integer>();
-		for (int i = 1; i < 10; i++) {
-			full.add(i);
-		}
+		
 	}
 
 	public Solver(int[][] sudoku) {
@@ -22,7 +18,7 @@ public class Solver {
 	}
 
 	public void newPuzzle(int[][] sudoku) {
-		this.table = sudoku;
+		table = sudoku;
 	}
 
 	public int[][] getResult() {
@@ -31,6 +27,7 @@ public class Solver {
 
 	public boolean solve() {
 		if (checkForDuplicates()) {
+			System.out.println("FUCK");
 			return solve(0, 0);
 		}
 		return false;
@@ -47,9 +44,9 @@ public class Solver {
 						return true;
 					}
 				}
+				table[y][x] = 0;
 				return false;
 			}
-
 		} else {
 			if (table[y][x] > 0) {
 				if (checkSquare(x, y)) {
@@ -75,13 +72,6 @@ public class Solver {
 						int newX = x;
 						int newY = y;
 						newX += 1;
-						if (newX == 9) {
-							newX = 0;
-							newY += 1;
-							if (newY == 9) {
-								newY = 0;
-							}
-						}
 						solved = solve(newX, newY);
 						if (solved) {
 							return true;
@@ -179,6 +169,7 @@ public class Solver {
 						return false;
 					}
 				}
+				// TODO THIS BE WRONG
 				if (y % 3 == 0 && y % 3 == 0) {
 					Set<Integer> setBox = new TreeSet<Integer>();
 					int boxY = y / 3;

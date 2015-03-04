@@ -7,10 +7,10 @@ import javax.swing.*;
 import solver.Solver;
 
 public class SudokuGUI {
-	private OneDigitField[][] box;
 	private JPanel gamePanel;
 	private Solver solver;
 	private JFrame frame;
+	private OneDigitField[][] box;
 	
 	public SudokuGUI(Solver solver) {
 		this.solver = solver;
