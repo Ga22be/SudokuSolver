@@ -10,7 +10,7 @@ import javax.swing.text.*;
 public class OneDigitField extends JTextField {
 
 	/**
-	 * Creates a text field to display only one character.
+	 * Creates a text field to display only one digit.
 	 */
 	public OneDigitField() {
 		super("");
@@ -18,6 +18,9 @@ public class OneDigitField extends JTextField {
 				.setDocumentFilter(new OneDigitFilter());
 	}
 
+	/**
+	 * Checks input and hinders it if its not a digit between 1 and 9.
+	 */
 	private class OneDigitFilter extends DocumentFilter {
 		OneDigitFilter() {
 			super();
@@ -30,7 +33,8 @@ public class OneDigitField extends JTextField {
 			if ((fb.getDocument().getLength() + str.length() - length) > 1) {
 				return;
 			}
-			if (!str.isEmpty() && (!Character.isDigit(str.charAt(0)) || str.charAt(0) == '0')) {
+			if (!str.isEmpty()
+					&& (!Character.isDigit(str.charAt(0)) || str.charAt(0) == '0')) {
 				return;
 			}
 			fb.replace(offset, length, str, attr);

@@ -1,38 +1,61 @@
 package solver;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Solver {
 	private int[][] table;
 
+	/**
+	 * Creates new solver object.
+	 */
 	public Solver() {
-		
+
 	}
 
-	public Solver(int[][] sudoku) {
-		this();
-		table = sudoku;
-	}
-
+	/**
+	 * Sets new puzzle for class to handle.
+	 * 
+	 * @param sudoku
+	 *            The new puzzle.
+	 */
 	public void newPuzzle(int[][] sudoku) {
 		table = sudoku;
 	}
 
+	/**
+	 * Returns the current state of the puzzle.
+	 * 
+	 * @return Current state of puzzle.
+	 */
 	public int[][] getResult() {
 		return table;
 	}
 
+	/**
+	 * Initiates solution process in class, first checking for obvious errors
+	 * followed by trying to brute force the solution.
+	 * 
+	 * @return True if the puzzle was solved, otherwise false.
+	 */
 	public boolean solve() {
 		if (checkForDuplicates()) {
-			System.out.println("FUCK");
 			return solve(0, 0);
 		}
 		return false;
 	}
 
+	/**
+	 * Recursive method for solving Sudoku puzzle. If this returns true then the
+	 * private variable table will have changed.
+	 * 
+	 * @param x
+	 *            The x coordintate in the puzzle to be handled.
+	 * @param y
+	 *            The y coordintate in the puzzle to be handled.
+	 * 
+	 * @return True if there is atleast one solution to the puzzle, otherwise
+	 *         false.
+	 */
 	private boolean solve(int x, int y) {
 		if (x == 8 && y == 8) {
 			if (table[y][x] > 0) {
@@ -56,9 +79,6 @@ public class Solver {
 					if (newX == 9) {
 						newX = 0;
 						newY += 1;
-						if (newY == 9) {
-							newY = 0;
-						}
 					}
 					return solve(newX, newY);
 				} else {
@@ -72,6 +92,10 @@ public class Solver {
 						int newX = x;
 						int newY = y;
 						newX += 1;
+						if (newX == 9) {
+							newX = 0;
+							newY += 1;
+						}
 						solved = solve(newX, newY);
 						if (solved) {
 							return true;
@@ -84,6 +108,17 @@ public class Solver {
 		}
 	}
 
+	/**
+	 * Wrapper method for all controls needing to be done while solving.
+	 * 
+	 * @param x
+	 *            The x coordintate in the puzzle to be handled.
+	 * @param y
+	 *            The y coordintate in the puzzle to be handled.
+	 * 
+	 * @return True if the current number in (x,y) doesn't conflict with the
+	 *         puzzle, otherwise false.
+	 */
 	private boolean checkSquare(int x, int y) {
 		return checkToXRow(x, y) && checkToYRow(x, y) && checkToBox(x, y);
 	}
@@ -154,6 +189,12 @@ public class Solver {
 		return true;
 	}
 
+	/**
+	 * Checks current board for obvious errors. Errors founds are in the nature
+	 * of duplicates on x or y rows or in the same board region.
+	 * 
+	 * @return True if none of these cases appear, otherwise false.
+	 */
 	private boolean checkForDuplicates() {
 		for (int y = 0; y < 9; y++) {
 			Set<Integer> setX = new TreeSet<Integer>();
@@ -169,13 +210,12 @@ public class Solver {
 						return false;
 					}
 				}
-				// TODO THIS BE WRONG
-				if (y % 3 == 0 && y % 3 == 0) {
+				if (x % 3 == 0 && y % 3 == 0) {
 					Set<Integer> setBox = new TreeSet<Integer>();
-					int boxY = y / 3;
-					int boxX = x / 3;
-					for (int i = boxY; i < 3; i++) {
-						for (int j = boxX; j < 3; j++) {
+					int boxY = (y / 3) * 3;
+					int boxX = (x / 3) * 3;
+					for (int i = boxY; i < boxY + 3; i++) {
+						for (int j = boxX; j < boxX + 3; j++) {
 							if (table[i][j] != 0) {
 								if (!setBox.add(table[i][j])) {
 									return false;

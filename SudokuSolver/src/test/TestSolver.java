@@ -67,7 +67,9 @@ public class TestSolver {
 		
 		
 			
-		Solver solver = new Solver(sudoku4);	
+		Solver solver = new Solver();	
+		
+		solver.newPuzzle(sudoku4);
 		
 		solver.print();
 		
