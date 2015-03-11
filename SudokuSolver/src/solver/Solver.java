@@ -38,7 +38,7 @@ public class Solver {
 	 * @return True if the puzzle was solved, otherwise false.
 	 */
 	public boolean solve() {
-		if (checkForDuplicates()) {
+		if (checkNoDuplicates()) {
 			return solve(0, 0);
 		}
 		return false;
@@ -195,7 +195,7 @@ public class Solver {
 	 * 
 	 * @return True if none of these cases appear, otherwise false.
 	 */
-	private boolean checkForDuplicates() {
+	private boolean checkNoDuplicates() {
 		for (int y = 0; y < 9; y++) {
 			Set<Integer> setX = new TreeSet<Integer>();
 			Set<Integer> setY = new TreeSet<Integer>();
@@ -212,10 +212,8 @@ public class Solver {
 				}
 				if (x % 3 == 0 && y % 3 == 0) {
 					Set<Integer> setBox = new TreeSet<Integer>();
-					int boxY = (y / 3) * 3;
-					int boxX = (x / 3) * 3;
-					for (int i = boxY; i < boxY + 3; i++) {
-						for (int j = boxX; j < boxX + 3; j++) {
+					for (int i = y; i < y + 3; i++) {
+						for (int j = x; j < x + 3; j++) {
 							if (table[i][j] != 0) {
 								if (!setBox.add(table[i][j])) {
 									return false;
