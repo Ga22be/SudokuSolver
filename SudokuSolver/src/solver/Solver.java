@@ -131,6 +131,8 @@ public class Solver {
 	 *            The x coordinate of the square in the 2D array to be examined.
 	 * @param y
 	 *            The y coordinate of the square in the 2D array to be examined.
+	 *            
+	 * @return True if there is no duplicate on same x row, otherwise false  
 	 */
 	private boolean checkToXRow(int x, int y) {
 		for (int xIndex = 0; xIndex < 9; xIndex++) {
@@ -151,6 +153,8 @@ public class Solver {
 	 *            The x coordinate of the square in the 2D array to be examined.
 	 * @param y
 	 *            The y coordinate of the square in the 2D array to be examined.
+	 *            
+	 * @return	True if there is no duplicate on same y row, otherwise false
 	 */
 	private boolean checkToYRow(int x, int y) {
 		for (int yIndex = 0; yIndex < 9; yIndex++) {
@@ -171,6 +175,8 @@ public class Solver {
 	 *            The x coordinate of the square in the 2D array to be examined.
 	 * @param y
 	 *            The y coordinate of the square in the 2D array to be examined.
+	 *            
+	 * @return True if there is no duplicate in the same 3x3 region, otherwise false
 	 */
 	private boolean checkToBox(int x, int y) {
 		int xStart = ((x / 3) * 3);
