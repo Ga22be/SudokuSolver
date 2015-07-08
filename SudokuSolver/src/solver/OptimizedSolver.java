@@ -17,25 +17,30 @@ public class OptimizedSolver {
 
 	public boolean solve() {
 		int solvedSquares = 0;
+		int loopCount = 0;
 		while (!calculated) {
 			int savedValue = solvedSquares;
 			int[] index = { 0, 0 };
-			solvedSquares = solve(index);
-			System.out.println(solvedSquares);
+			solvedSquares = checkTo(index);
+			// System.out.println(solvedSquares);
 			if (solvedSquares == 81) {
 				calculated = true;
 				solved = true;
-				return solved;
 			} else if (solvedSquares == savedValue) {
-				calculated = true;
-				solved = false;
-				return solved;
+				int[] index2 = { 0, 0 };
+				solvedSquares = crossCheck(index2);
+				// System.out.println(solvedSquares);
+				if (solvedSquares == savedValue) {
+					calculated = true;
+					solved = false;
+				}
 			}
+			loopCount++;
 		}
 		return solved;
 	}
 
-	private int solve(int[] index) {
+	private int checkTo(int[] index) {
 		if (index[0] == 8 && index[1] == 8) {
 			if (squares[index[1]][index[0]].solved()) {
 				return 1;
@@ -50,19 +55,58 @@ public class OptimizedSolver {
 				return 0;
 			}
 		} else if (squares[index[1]][index[0]].solved()) {
+			// System.out.println("Skipped: " + index[0] + ", " + index[1]);
 			nextIndex(index);
-			return 1 + solve(index);
+			return 1 + checkTo(index);
 		} else {
 			checkToXRow(index);
 			checkToYRow(index);
 			checkToBox(index);
 			if (squares[index[1]][index[0]].solved()) {
 				squares[index[1]][index[0]].fillValue();
+				// System.out.println(
+				// "Solved: " + index[0] + ", " + index[1] + " Value: " +
+				// squares[index[1]][index[0]].value);
 				nextIndex(index);
-				return 1 + solve(index);
+				return 1 + checkTo(index);
 			}
 			nextIndex(index);
-			return solve(index);
+			return checkTo(index);
+		}
+	}
+
+	private int crossCheck(int[] index) {
+		if (index[1] == 8 && index[0] == 8) {
+			if (squares[index[1]][index[0]].solved()) {
+				return 1;
+			} else {
+				crossCheckAltsToXRow(index);
+				crossCheckAltsToYRow(index);
+				crossCheckAltsToBox(index);
+				if (squares[index[1]][index[0]].solved()) {
+					squares[index[1]][index[0]].fillValue();
+					return 1;
+				}
+				return 0;
+			}
+		} else if (squares[index[1]][index[0]].solved()) {
+			// System.out.println("Skipped: " + index[0] + ", " + index[1]);
+			nextIndex(index);
+			return 1 + crossCheck(index);
+		} else {
+			crossCheckAltsToXRow(index);
+			crossCheckAltsToYRow(index);
+			crossCheckAltsToBox(index);
+			if (squares[index[1]][index[0]].solved()) {
+				squares[index[1]][index[0]].fillValue();
+				// System.out.println(
+				// "Solved: " + index[0] + ", " + index[1] + " Value: " +
+				// squares[index[1]][index[0]].value);
+				nextIndex(index);
+				return 1 + crossCheck(index);
+			}
+			nextIndex(index);
+			return crossCheck(index);
 		}
 	}
 
@@ -81,8 +125,13 @@ public class OptimizedSolver {
 		}
 		for (int y = 0; y < 9; y++) {
 			for (int x = 0; x < 9; x++) {
-				squares[y][x] = new Square(sudoku[y][x],
-						(LinkedList<Integer>) list.clone());
+				if (sudoku[y][x] == 0) {
+					squares[y][x] = new Square(sudoku[y][x], (LinkedList<Integer>) list.clone());
+				} else {
+					LinkedList<Integer> finishedList = new LinkedList<Integer>();
+					finishedList.add(sudoku[y][x]);
+					squares[y][x] = new Square(sudoku[y][x], finishedList);
+				}
 			}
 		}
 		calculated = false;
@@ -92,10 +141,9 @@ public class OptimizedSolver {
 	 * Checks current square on sudoku board towards its horizontal row
 	 * eliminating all nonpossible alternatives from the squares list.
 	 * 
-	 * @param x
-	 *            The x coordinate of the square in the 2D array to be examined.
-	 * @param y
-	 *            The y coordinate of the square in the 2D array to be examined.
+	 * @param index
+	 *            Array containing the x & y coordinates in question, in that
+	 *            order.
 	 */
 	private void checkToXRow(int[] index) {
 		if (!squares[index[1]][index[0]].solved()) {
@@ -106,6 +154,7 @@ public class OptimizedSolver {
 					if (index[0] != xIndex) {
 						if (val == squares[index[1]][xIndex].value) {
 							itr.remove();
+							break;
 						}
 					}
 				}
@@ -117,10 +166,9 @@ public class OptimizedSolver {
 	 * Checks current square on sudoku board towards its vertical row
 	 * eliminating all nonpossible alternatives form the squares list.
 	 * 
-	 * @param x
-	 *            The x coordinate of the square in the 2D array to be examined.
-	 * @param y
-	 *            The y coordinate of the square in the 2D array to be examined.
+	 * @param index
+	 *            Array containing the x & y coordinates in question, in that
+	 *            order.
 	 */
 	private void checkToYRow(int[] index) {
 		if (!squares[index[1]][index[0]].solved()) {
@@ -131,6 +179,7 @@ public class OptimizedSolver {
 					if (index[1] != yIndex) {
 						if (val == squares[yIndex][index[0]].value) {
 							itr.remove();
+							break;
 						}
 					}
 				}
@@ -140,12 +189,11 @@ public class OptimizedSolver {
 
 	/**
 	 * Checks current square on sudoku board towards its own 3x3 square
-	 * eliminating all nonpossible alternatives form the squares list.
+	 * eliminating all nonpossible alternatives from the squares list.
 	 * 
-	 * @param x
-	 *            The x coordinate of the square in the 2D array to be examined.
-	 * @param y
-	 *            The y coordinate of the square in the 2D array to be examined.
+	 * @param index
+	 *            Array containing the x & y coordinates in question, in that
+	 *            order.
 	 */
 	private void checkToBox(int[] index) {
 		if (!squares[index[1]][index[0]].solved()) {
@@ -154,6 +202,7 @@ public class OptimizedSolver {
 			int yStart = ((index[1] / 3) * 3);
 			while (itr.hasNext()) {
 				int val = itr.next();
+				outerloop:
 				for (int yIndex = yStart; yIndex < yStart + 3; yIndex++) {
 					for (int xIndex = xStart; xIndex < xStart + 3; xIndex++) {
 						if (index[0] == xIndex && index[1] == yIndex) {
@@ -161,6 +210,7 @@ public class OptimizedSolver {
 						} else {
 							if (val == squares[yIndex][xIndex].value) {
 								itr.remove();
+								break outerloop;
 							}
 						}
 					}
@@ -170,10 +220,82 @@ public class OptimizedSolver {
 	}
 
 	/**
+	 * Checks current square's alternatives vs all other alternatives of its X
+	 * row
+	 * 
+	 * @param index
+	 *            Array containing the x & y coordinates in question, in that
+	 *            order.
+	 */
+	private void crossCheckAltsToXRow(int[] index) {
+		if (!squares[index[1]][index[0]].solved()) {
+			LinkedList<Integer> alts = (LinkedList<Integer>) squares[index[1]][index[0]].list.clone();
+			for (int xIndex = 0; xIndex < 9; xIndex++) {
+				if (xIndex != index[0]) {
+					alts.removeAll(squares[index[1]][xIndex].list);
+				}
+			}
+			if (alts.size() == 1) {
+				squares[index[1]][index[0]].list = alts;
+			}
+		}
+	}
+
+	/**
+	 * Checks current square's alternatives vs all other alternatives of its Y
+	 * row
+	 * 
+	 * @param index
+	 *            Array containing the x & y coordinates in question, in that
+	 *            order.
+	 */
+	private void crossCheckAltsToYRow(int[] index) {
+		if (!squares[index[1]][index[0]].solved()) {
+			LinkedList<Integer> alts = (LinkedList<Integer>) squares[index[1]][index[0]].list.clone();
+			for (int yIndex = 0; yIndex < 9; yIndex++) {
+				if (yIndex != index[0]) {
+					alts.removeAll(squares[yIndex][index[0]].list);
+				}
+			}
+			if (alts.size() == 1) {
+				squares[index[1]][index[0]].list = alts;
+			}
+		}
+	}
+
+	/**
+	 * Checks current square's alternatives vs all other alternatives of its Y
+	 * row
+	 * 
+	 * @param index
+	 *            Array containing the x & y coordinates in question, in that
+	 *            order.
+	 */
+	private void crossCheckAltsToBox(int[] index) {
+		if (!squares[index[1]][index[0]].solved()) {
+			LinkedList<Integer> alts = (LinkedList<Integer>) squares[index[1]][index[0]].list.clone();
+			int xStart = ((index[0] / 3) * 3);
+			int yStart = ((index[1] / 3) * 3);
+			for (int yIndex = yStart; yIndex < yStart + 3; yIndex++) {
+				for (int xIndex = xStart; xIndex < xStart + 3; xIndex++) {
+					if (index[0] == xIndex && index[1] == yIndex) {
+						// Don't want to check vs own square
+					} else {
+						alts.removeAll(squares[yIndex][xIndex].list);
+					}
+				}
+			}
+			if (alts.size() == 1) {
+				squares[index[1]][index[0]].list = alts;
+			}
+		}
+	}
+
+	/**
 	 * Computes next logical index of the table in chronological order.
 	 * 
 	 * @param index
-	 *            Array containing the x & y coordinates in question, int that
+	 *            Array containing the x & y coordinates in question, in that
 	 *            order.
 	 */
 	private void nextIndex(int[] index) {
@@ -242,7 +364,7 @@ public class OptimizedSolver {
 		}
 
 		/**
-		 * Returns true if square is filled
+		 * Returns true if square is filled, else false
 		 * 
 		 * @return True if filled
 		 */

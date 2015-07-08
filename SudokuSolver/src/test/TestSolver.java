@@ -1,11 +1,12 @@
 package test;
 
+import solver.OptimizedSolver;
 import solver.Solver;
 
 public class TestSolver {
 
 	public static void main(String[] args) {
-		int[][] sudoku = { 
+		int[][] sudoku0 = { 
 				{ 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 				{ 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 
 				{ 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -67,9 +68,10 @@ public class TestSolver {
 		
 		
 			
-		Solver solver = new Solver();	
+		OptimizedSolver solver = new OptimizedSolver();	
+//		Solver solver = new Solver();
 		
-		solver.newPuzzle(sudoku4);
+		solver.newPuzzle(sudoku1);
 		
 		solver.print();
 		
