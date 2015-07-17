@@ -14,28 +14,25 @@ public class OptimizedSolver {
 		calculated = false;
 		solved = false;
 	}
-
+	
 	public boolean solve() {
 		int solvedSquares = 0;
-		int loopCount = 0;
 		while (!calculated) {
 			int savedValue = solvedSquares;
 			int[] index = { 0, 0 };
-			solvedSquares = checkTo(index);
+			solvedSquares = checkTo(index.clone());
 			// System.out.println(solvedSquares);
 			if (solvedSquares == 81) {
 				calculated = true;
 				solved = true;
 			} else if (solvedSquares == savedValue) {
-				int[] index2 = { 0, 0 };
-				solvedSquares = crossCheck(index2);
+				solvedSquares = crossCheck(index.clone());
 				// System.out.println(solvedSquares);
 				if (solvedSquares == savedValue) {
 					calculated = true;
 					solved = false;
 				}
 			}
-			loopCount++;
 		}
 		return solved;
 	}
@@ -333,6 +330,7 @@ public class OptimizedSolver {
 	}
 
 	public static class Square {
+//		private int[] position;
 		private int value;
 		private LinkedList<Integer> list;
 
@@ -348,6 +346,7 @@ public class OptimizedSolver {
 		public Square(int value, LinkedList<Integer> list) {
 			this.value = value;
 			this.list = list;
+//			this.position = position;
 			if (value > 0) {
 				list.clear();
 				list.add(value);
@@ -383,5 +382,23 @@ public class OptimizedSolver {
 			return String.valueOf(value);
 		}
 	}
+	
+//	public static class Line {
+//		Square[] line;
+//		HashMap<Integer, Square> alternatives;
+//		
+//		public Line(){
+//			line = new Square[9];
+//			alternatives = new HashMap<Integer, Square>();
+//		}
+//		
+//		public void addSquare(Square square, int indexInRow, int[] index){
+//			line[indexInRow] = square;
+//			Iterator<Integer> itr = square.list.iterator();
+//			while(itr.hasNext()){
+//				alternatives.put(itr.next(), square);
+//			}
+//		}
+//	}
 
 }

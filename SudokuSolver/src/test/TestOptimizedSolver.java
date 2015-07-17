@@ -58,12 +58,12 @@ public class TestOptimizedSolver {
 		};
 		
 		OptimizedSolver optSolver = new OptimizedSolver();
-		optSolver.newPuzzle(sudoku4.clone());
+		optSolver.newPuzzle(sudoku2.clone());
 //		optSolver.print();
 		System.out.println();
 
 		Solver stSolver = new Solver();
-		stSolver.newPuzzle(sudoku4.clone());
+		stSolver.newPuzzle(sudoku2.clone());
 				
 		long start = System.currentTimeMillis();
 		System.out.println(optSolver.solve());
@@ -76,6 +76,7 @@ public class TestOptimizedSolver {
 		long standard = end - start;
 				
 		optSolver.print();
+		System.out.println();
 		stSolver.print();
 		
 		System.out.println("Optimized time: " + optimized + "ms");
