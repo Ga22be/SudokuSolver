@@ -2,7 +2,7 @@ package solver;
 
 import java.util.*;
 
-public class OptimizedSolver {
+public class OptimizedSolver implements Solver{
 	private Square[][] squares;
 	private boolean calculated;
 	private boolean solved;
@@ -327,6 +327,21 @@ public class OptimizedSolver {
 	 */
 	public boolean calculated() {
 		return calculated;
+	}
+	
+	/**
+	 * Returns the current state of the puzzle.
+	 * 
+	 * @return Current state of puzzle.
+	 */
+	public int[][] getResult() {
+		int[][] table = new int[9][9];
+		for(int i = 0; i < 9; i++){
+			for(int j = 0; j < 9; j++){
+				table[j][i] = squares[j][i].value;
+			}
+		}
+		return table;
 	}
 
 	public static class Square {

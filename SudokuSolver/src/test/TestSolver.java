@@ -1,7 +1,7 @@
 package test;
 
 import solver.OptimizedSolver;
-import solver.Solver;
+import solver.BruteSolver;
 
 public class TestSolver {
 

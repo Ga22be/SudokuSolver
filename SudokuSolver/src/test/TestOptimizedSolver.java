@@ -3,7 +3,7 @@ package test;
 import java.util.LinkedList;
 
 import solver.OptimizedSolver;
-import solver.Solver;
+import solver.BruteSolver;
 
 public class TestOptimizedSolver {
 
@@ -58,12 +58,12 @@ public class TestOptimizedSolver {
 		};
 		
 		OptimizedSolver optSolver = new OptimizedSolver();
-		optSolver.newPuzzle(sudoku2.clone());
+		optSolver.newPuzzle(sudoku1.clone());
 //		optSolver.print();
 		System.out.println();
 
-		Solver stSolver = new Solver();
-		stSolver.newPuzzle(sudoku2.clone());
+		BruteSolver stSolver = new BruteSolver();
+		stSolver.newPuzzle(sudoku1.clone());
 				
 		long start = System.currentTimeMillis();
 		System.out.println(optSolver.solve());

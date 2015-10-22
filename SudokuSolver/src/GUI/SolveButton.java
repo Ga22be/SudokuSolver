@@ -33,7 +33,8 @@ public class SolveButton extends JButton implements ActionListener {
 			gui.failedMessage();
 			return;
 		}
-		gui.fillPuzzle(table);
+		int[][] tableToPrint = solver.getResult();
+		gui.fillPuzzle(tableToPrint);
 	}
 
 }
